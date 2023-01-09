@@ -7,7 +7,7 @@ ARG PLUGINS_FILE="./recommended-plugins.txt"
 
 FROM python:${PYTHON_VERSION}
 
-RUN apt-get update && apt-get upgrade --yes && apt-get install git
+RUN apt-get update && apt-get upgrade --yes && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*;
 
 # See http://label-schema.org for metadata schema
 # TODO: Add `build-date` and `version`
@@ -24,12 +24,12 @@ RUN useradd --create-home --shell /bin/bash harambe
 WORKDIR /home/harambe
 COPY . .
 
-RUN pip install --upgrade pip \
+RUN pip install --no-cache-dir --upgrade pip \
     && pip install --no-cache-dir . \
-    && pip install -r recommended-plugins.txt \
+    && pip install --no-cache-dir -r recommended-plugins.txt \
 # Fix RLP installation issue
     && pip uninstall rlp --yes \
-    && pip install rlp==3.0.0 \
+    && pip install --no-cache-dir rlp==3.0.0 \
 # Validate installation
     && ape --version
 
